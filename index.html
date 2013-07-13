@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Yeti Rampage</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <script src="js/libs/jquery-1.9.1.js"></script>
+  <script src="js/libs/bootstrap.js"></script>
+  <script src="js/libs/handlebars-1.0.0-rc.4.js"></script>
+  <script src="js/libs/ember-1.0.0-rc.6.js"></script>
+  <script src="http://builds.emberjs.com.s3.amazonaws.com/ember-data-0.13.js"></script>
+  <script src="js/app.js"></script>
+
+</head>
+<body>
+
+  <script type="text/x-handlebars" id="application">
+
+  {{partial 'navbar'}}
+  {{render filters filter}}
+  {{partial 'footer'}}
+    
+  </script>
+
+  <script type="text/x-handlebars" id="_navbar">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <a class="brand">Yeti Rampage 3.0</a>
+        <ul class="nav">
+          <li><a href='#'>Dashboard</a></li>
+          <li><a href='#'>Economy</a></li>
+          <li><a href='#'>Gameplay</a></li>
+          <li><a href='#'>PvP</a></li>
+          <li><a href='#'>HC Spending</a></li>
+          <li><a href='#'>Server Stats</a></li>
+          <li><a href='#'>Cohort</a></li>
+        </ul>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="_footer">
+    <p>Footer</>
+  </script>
+
+
+  <script type="text/x-handlebars" id="filters">
+
+    <div class="row-fluid">
+    <div class="span8">
+      <h3>Filters</h3>
+      {{model}}
+      {{controller}}
+    </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="dashboard">
+    <div class="container-fluid">
+      Dashboard charts here
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="economy">
+    <div class="container-fluid">
+      Economy charts here
+    </div>
+  </script>
+
+
+</body>
+</html>
