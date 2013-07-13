@@ -10,6 +10,7 @@ App.Store = DS.Store.extend({
 //Routers
 App.Router.map(function() {
 	this.resource('dashboard', {path: "/"});
+	this.resource('economy');
 });
 
 

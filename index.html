@@ -23,7 +23,7 @@
       <a class="brand">Yeti Rampage 3.0</a>
       <ul class="nav">
         <li>{{#linkTo dashboard}}Dashboard{{/linkTo}}</li>
-        <li><a href='#'>Economy</a></li>
+        <li>{{#linkTo economy}}Economy{{/linkTo}}</li>
         <li><a href='#'>Gameplay</a></li>
         <li><a href='#'>PvP</a></li>
         <li><a href='#'>HC Spending</a></li>
@@ -34,7 +34,7 @@
   </div>
 
   
-  <div class="row">
+  <div class="row-fluid">
   <div class="span8">
   <h4>Filters</h4>
   <div class="accordion" id="accordion2">
@@ -47,7 +47,13 @@
     </div>
     <div {{bindAttr id="title"}} class="accordion-body collapse">
       <div class="accordion-inner">
-        {{values}}
+        {{#each controller.values}}
+          <label class="checkbox">
+        {{view Ember.Checkbox checkedBinding="controller.selected"}}
+        {{this}}
+
+          </label>
+{{/each}} 
       </div>
     </div>
   </div>
