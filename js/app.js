@@ -2,29 +2,26 @@ App = Ember.Application.create({
 	LOG_TRANSITIONS: true,
 });
 
-App.FixtureStore = DS.Store.extend({
+App.Store = DS.Store.extend({
   adapter: 'DS.FixtureAdapter'
 });
 
-Ember.LOG_BINDINGS = true;
 
 //Routers
 App.Router.map(function() {
-	this.resource('application');
-	this.route('filters');
+	this.resource('dashboard');
 });
 
 
-App.FiltersRoute = Ember.Route.extend({		
+
+App.IndexRoute = Ember.Route.extend({
+	model: function() {
+		return App.Filter.find();
+	},
 	setupController: function(controller, filter) {
-		controller.set('model', App.Filter.all());
+		controller.set('model', filter);
 	}
 });
-
-App.FiltersController = Ember.ArrayController.extend({
-	}
-);
-
 
 
 
@@ -39,20 +36,6 @@ App.Filter = DS.Model.extend({
 	selected: DS.attr('array')
 });
 
-/*
-App.Filters = Ember.Object.extend({
-
-})
-
-App.Filter = Ember.Object.extend({
-	title: "",
-	values: [],
-	selected: []
-});
-
-App.Dates = Filter.create();
-App.
-*/
 
 
 App.Filter.FIXTURES = [
@@ -61,19 +44,24 @@ App.Filter.FIXTURES = [
 	title: "Dates",
 	values : [1,3,7,14,30,60,90,180,360],
 	selected : [7]
-	}
+	},
 
-/*	{  
+	{  
 	id : 2,
 	title : "Devices",
 	values : ["iPad 2", "iPad 3", "iPad 4"],
 	selected : ["iPad 2", "iPad 3", "iPad 4"]
+	},
+
+	{  
+	id : 3,
+	title : "Publishers",
+	values : ["1", "2", "3"],
+	selected : ["1"]
 	}
-*/
 
 ];
 
-console.log(App.Filter.find());
 
 //Views
 
@@ -81,3 +69,19 @@ console.log(App.Filter.find());
 
 //Controllers
 
+App.IndexController = Ember.ArrayController.extend({
+	itemController: 'filter'
+});
+
+App.FilterController = Ember.ObjectController.extend({
+	titleId: function() {
+		return "#" + this.get('title');}.property('title')
+	}
+);
+
+
+//Helpers
+
+Handlebars.registerHelper('prependChar', function(string, character) {
+	return string + character
+});

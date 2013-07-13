@@ -16,54 +16,56 @@
 </head>
 <body>
 
-  <script type="text/x-handlebars" id="application">
+  <script type="text/x-handlebars" data-template-name="index">
 
-  {{partial 'navbar'}}
-  {{render filters filter}}
-  {{partial 'footer'}}
-    
-  </script>
+   <div class="navbar">
+    <div class="navbar-inner">
+      <a class="brand">Yeti Rampage 3.0</a>
+      <ul class="nav">
+        <li>{{#linkTo dashboard}}Dashboard{{/linkTo}}</li>
+        <li><a href='#'>Economy</a></li>
+        <li><a href='#'>Gameplay</a></li>
+        <li><a href='#'>PvP</a></li>
+        <li><a href='#'>HC Spending</a></li>
+        <li><a href='#'>Server Stats</a></li>
+        <li><a href='#'>Cohort</a></li>
+      </ul>
+    </div>
+  </div>
 
-  <script type="text/x-handlebars" id="_navbar">
-    <div class="navbar">
-      <div class="navbar-inner">
-        <a class="brand">Yeti Rampage 3.0</a>
-        <ul class="nav">
-          <li><a href='#'>Dashboard</a></li>
-          <li><a href='#'>Economy</a></li>
-          <li><a href='#'>Gameplay</a></li>
-          <li><a href='#'>PvP</a></li>
-          <li><a href='#'>HC Spending</a></li>
-          <li><a href='#'>Server Stats</a></li>
-          <li><a href='#'>Cohort</a></li>
-        </ul>
+  
+  
+  <div class="span8">
+  <h4>Filters</h4>
+  <div class="accordion" id="accordion2">
+  {{#each controller}}
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"  {{bindAttr href="titleId"}}>
+        {{title}}
+      </a>
+    </div>
+    <div {{bindAttr id="title"}} class="accordion-body collapse">
+      <div class="accordion-inner">
+        {{values}}
       </div>
     </div>
+  </div>
+  {{/each}}
+  </div>
+  </div>
+  
+  {{outlet}}
+
   </script>
 
-  <script type="text/x-handlebars" id="_footer">
-    <p>Footer</>
-  </script>
-
-
-  <script type="text/x-handlebars" id="filters">
-
-    <div class="row-fluid">
-    <div class="span8">
-      <h3>Filters</h3>
-      {{model}}
-      {{controller}}
-    </div>
-    </div>
-  </script>
-
-  <script type="text/x-handlebars" id="dashboard">
+  <script type="text/x-handlebars" data-template-name="dashboard">
     <div class="container-fluid">
       Dashboard charts here
     </div>
   </script>
 
-  <script type="text/x-handlebars" id="economy">
+  <script type="text/x-handlebars" data-template-name="economy">
     <div class="container-fluid">
       Economy charts here
     </div>
