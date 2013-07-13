@@ -9,6 +9,7 @@ App.Store = DS.Store.extend({
 
 //Routers
 App.Router.map(function() {
+	this.resource('index', {path: "/"});
 	this.resource('dashboard');
 });
 
@@ -23,7 +24,11 @@ App.IndexRoute = Ember.Route.extend({
 	}
 });
 
-
+App.DashboardRoute = Ember.Route.extend({
+	renderTemplate: function() {
+		this.render({ outlet: 'charts'})
+	}
+});
 
 
 //Models
