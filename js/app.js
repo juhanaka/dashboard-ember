@@ -9,26 +9,21 @@ App.Store = DS.Store.extend({
 
 //Routers
 App.Router.map(function() {
-	this.resource('index', {path: "/"});
-	this.resource('dashboard');
+	this.resource('dashboard', {path: "/"});
 });
 
 
 
-App.IndexRoute = Ember.Route.extend({
+App.ApplicationRoute = Ember.Route.extend({
 	model: function() {
 		return App.Filter.find();
 	},
 	setupController: function(controller, filter) {
 		controller.set('model', filter);
-	}
+	},
+
 });
 
-App.DashboardRoute = Ember.Route.extend({
-	renderTemplate: function() {
-		this.render({ outlet: 'charts'})
-	}
-});
 
 
 //Models
@@ -74,7 +69,7 @@ App.Filter.FIXTURES = [
 
 //Controllers
 
-App.IndexController = Ember.ArrayController.extend({
+App.ApplicationController = Ember.ArrayController.extend({
 	itemController: 'filter'
 });
 
@@ -85,8 +80,3 @@ App.FilterController = Ember.ObjectController.extend({
 );
 
 
-//Helpers
-
-Handlebars.registerHelper('prependChar', function(string, character) {
-	return string + character
-});

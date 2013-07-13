@@ -16,7 +16,7 @@
 </head>
 <body>
 
-  <script type="text/x-handlebars" data-template-name="index">
+  <script type="text/x-handlebars">
 
    <div class="navbar">
     <div class="navbar-inner">
@@ -34,7 +34,7 @@
   </div>
 
   
-  
+  <div class="row">
   <div class="span8">
   <h4>Filters</h4>
   <div class="accordion" id="accordion2">
@@ -54,9 +54,11 @@
   {{/each}}
   </div>
   </div>
+  </div>
   
-  {{outlet charts}}
-
+  <div>
+  {{outlet}}
+  </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="dashboard">
