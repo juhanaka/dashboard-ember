@@ -8,3 +8,4 @@ App.FilterController = Ember.ObjectController.extend({
 	titleId: function() {
 		return "#" + this.get('filterTitle');}.property('filterTitle')
 });
+

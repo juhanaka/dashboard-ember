@@ -1,7 +1,8 @@
 //Models
 
-var defaultFilters = ['dates', 'devices', 'publisher'];
+//FILTER MODELS
 
+var defaultFilters = ['dates'];
 
 //set Filter class. The Filter object will be multiplied for each filter.
 App.Filter = Ember.Object.extend({
@@ -19,22 +20,23 @@ App.Filter = Ember.Object.extend({
 		return Ember.Deferred.promise(function (p) {  
 			if (filter.get('loadedFilter')) { 
 				p.resolve(filter.get('values'));
-
 			} else {
-				p.resolve($.getJSON("http://127.0.0.1:13373/" + filter.get('id') +".json").then(function(response) {
+				p.resolve($.getJSON("http://127.0.0.1:13373/options/" + filter.get('id')).then(function(response) {
 				var values = Ember.A();
-				response['values'].forEach(function(value) {
+				response[filter.get('id')].forEach(function(value) {
 					values.push(value);
 				});
-				filter.setProperties({values: values, loadFilter: true});
+				filter.setProperties({"values": values, "loadedFilter": true});
 				return values;
 				}))
 			}})}
 	}  
 );
 
+
+
 //reopen class to create "all" method which returns all instances of Filter class
-App.Filter.reopenClass({
+/*App.Filter.reopenClass({
 	all: function() {
 		if (this._all) {return this._all; }
 		var all = Ember.A();
@@ -43,8 +45,20 @@ App.Filter.reopenClass({
 		});
 		this._all = all;
 		return all;
-	}
-});
+}});*/
+
+App.Filter.reopenClass({
+	all: function() {
+		if (this._all) {return this._all; }
+		var all = Ember.A();
+		defaultFilters.forEach(function(id) {
+			var filter = App.Filter.create({id: id});
+			filter.loadValues();
+			all.pushObject(filter);
+		});
+		this._all = all;
+		return all;
+}});
 
 //reopen Filter to set an observer that notifies when filter is changed
 App.Filter.reopen({
@@ -52,6 +66,74 @@ App.Filter.reopen({
 	console.log("filter changed");
 }, 'this.values.@each.selected')
 });
+
+App.Filters = App.Filter.all();
+
+
+//METRICS MODELS
+
+var defaultMetrics = ['dau', 'dnu', 'daily_revenue']
+
+var defaultMetricsSettings = [
+{"id":"dau", "view" : "Dashboard", "calculation" : "sum", "format" : "bar", "width" : "48%"}, 
+{"id":"dnu", "view" : "Dashboard", "calculation" : "sum", "format" : "bar", "width" : "48%"}
+];
+
+App.Metric = Ember.Object.extend({
+
+	metricTitle: function() {
+		return this.get('id').charAt(0).toUpperCase() + this.get('id').slice(1);
+	}.property('id'),
+
+	loadedMetric: false,
+
+	filtersBinding: 'App.Filters',
+
+	loadValues: function() {
+	var metric = this;
+	var filters = metric.get('filters');
+	
+	return Ember.Deferred.promise(function (p) {  
+		if (metric.get('loadedMetric')) { 
+			p.resolve(metric.get('values'));
+
+		} else {
+			p.resolve(
+				console.log('sending ajax'),
+				$.ajax({ 
+				url: "http://127.0.0.1:13373/" + metric.get('id') + "/",
+				data: JSON.stringify(metric.get('filters')),
+				}).then(function(response) {
+			var values = Ember.A();
+			response[metric.get('id')].forEach(function(value) {
+				values.push(value);
+				console.log('loaded metrics');
+			});
+			metric.setProperties({"values": values, "loadedMetric": true});
+			return values;
+			}))
+		}})}
+
+
+});
+
+App.Metric.reopenClass({
+
+
+	findByView: function(searchView) {
+		if (this._metrics) {return this._metrics; }
+		var metrics = Ember.A();
+		defaultMetricsSettings.forEach(function(metric) {
+			if (metric.view == searchView)
+				metrics.pushObject(App.Metric.create({id: metric.id},{view: metric.view}, {calculation: metric.calculation}, {format: metric.format}, {width: metric.width}));
+		});
+		this._metrics = metrics;
+		return metrics;
+	}
+});
+
+
+
 
 
 

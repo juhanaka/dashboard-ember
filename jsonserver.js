@@ -3,12 +3,13 @@ var sys = require('sys');
 var server = http.createServer(function(req, res) {
 
 if(req.url) {
-var urli = req.url;
-//callBack = urli.split("?")[1].slice(6);
-//console.log(callBack);
+
+console.log(req.url);
+path = req.url.split("/")[1];
+console.log(path);
 res.writeHead(200, {
-'Content-Type': 'application/json',
-"Access-Control-Allow-Origin": "*"
+    'Content-Type': 'application/json',
+    "Access-Control-Allow-Origin": "*"
 });
 res.end(JSON.stringify(getTrackInfoJson()));
 } 
@@ -16,5 +17,10 @@ res.end(JSON.stringify(getTrackInfoJson()));
 server.listen(13373, "127.0.0.1");
 console.log('Server running at http://127.0.0.1:13373/');
 function getTrackInfoJson() {
-return { "values": [{"value":1, "selected": false}, {"value":3, "selected": true}, {"value":7, "selected": true}, {"value":14, "selected": true}, {"value":30, "selected": true}]};
+    if (path == "options")
+        return { "dates": [{"value":1, "selected": false}, {"value":3, "selected": true}, {"value":7, "selected": true}, {"value":14, "selected": true}, {"value":30, "selected": true}]};
+    else if (path == "dau")
+        return {"dau": [{"key": {"date": 1}, "val": 1000}]};
+    else if (path == "dau")
+        return {"dnu": [{"key": {"date": 1}, "val": 1000}]};
 }

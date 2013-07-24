@@ -64,16 +64,26 @@
   </div>
   </div>
   </div>
-  <div class="row-fluid" style="margin-bottom:20px">
-    <button class="btn btn-info" type="button">Update Charts</button>
-  </div>
   <div class="container-fluid">{{outlet}}</div>
   </script>
 
 
   <script type="text/x-handlebars" data-template-name="dashboard">
     <div class="container-fluid">
+      <div class="row-fluid" style="margin-bottom:20px">
+        <button class="btn btn-info" type="button">Update Charts</button>
+      </div>
       Dashboard charts here
+      {{#each controller}}
+      {{id}}
+      {{calculation}}
+      {{#each filters}}
+      {{#each values}}
+      {{value}} {{selected}}
+      {{/each}}
+      {{/each}}
+      {{format}}
+      {{/each}}
       {{outlet}}
     </div>
   </script>
@@ -90,7 +100,8 @@
 
 
   <script type="text/x-handlebars" data-template-name="chart">
-    <div class=container-fluid>
+    <div class="container-fluid">
+    This is a chart
     {{outlet}}
     </div>
   </script>
