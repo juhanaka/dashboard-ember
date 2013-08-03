@@ -19,6 +19,7 @@
   <script src="js/controllers.js"></script>
   <script src="js/models.js"></script>
   <script src="js/routes.js"></script>
+  <script src="js/views.js"></script>
 </head>
 <body>
 
@@ -75,7 +76,7 @@
       </div>
       Dashboard charts here
       {{#each controller}}
-      {{id}}
+      {{metricTitle}}
       {{calculation}}
       {{#each filters}}
       {{#each values}}
@@ -92,20 +93,24 @@
 
   <script type="text/x-handlebars" data-template-name="economy">
     <div class="container-fluid">
+      <div class="row-fluid" style="margin-bottom:20px">
+        <button class="btn btn-info" type="button">Update Charts</button>
+      </div>
       Economy charts here
-      {{outlet}}
+      {{#each controller}}
+      {{view App.ChartView}}
+      {{/each}}
     </div>
   </script>
-
-
 
   <script type="text/x-handlebars" data-template-name="chart">
     <div class="container-fluid">
-    This is a chart
-    {{outlet}}
+      This a {{format}} chart
+      {{#each values}}
+      {{/each}}
+      {{outlet}}
     </div>
   </script>
-
 
 </body>
 </html>

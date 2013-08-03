@@ -11,7 +11,7 @@ App.Router.map(function() {
 App.ApplicationRoute = Ember.Route.extend({
 	//set application routes model to all filters
 	model: function() {
-		return App.Filter.all();
+		return App.Filters;
 	},
 
 	//after filter has loaded, let's load its values
@@ -28,11 +28,6 @@ App.ApplicationRoute = Ember.Route.extend({
 		});
 
 		return promise
-	},
-
-	//create a controller called ApplicationController and pass the filter as its model
-	setupController: function(controller, filter) {
-		controller.set('model', filter);
 	}
 
 });
@@ -43,12 +38,41 @@ App.DashboardRoute = Ember.Route.extend({
 	},
 
 	afterModel: function(model) {
-		return model.forEach(function(item) {
-			item.loadValues();
+		var promise;
+		model.forEach(function(item) {
+			if (promise) {
+				promise = promise.then(function() {
+					item.loadValues();
+				});
+			} else {
+				promise = item.loadValues();
+			}
 		});
+		return promise
 	},
 
-	setupController: function(controller, model) {
-		controller.set('model', model);
-	}
+
 });
+
+App.EconomyRoute = Ember.Route.extend({
+	model: function() {
+		return App.Metric.findByView('Economy');
+	},
+	
+	afterModel: function(model) {
+		var promise;
+		model.forEach(function(item) {
+			if (promise) {
+				promise = promise.then(function() {
+					item.loadValues();
+				});
+			} else {
+				promise = item.loadValues();
+			}
+		});
+
+		return promise
+	}
+
+});
+
