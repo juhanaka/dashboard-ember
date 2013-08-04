@@ -7,19 +7,37 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/bootstrap.css">
+  <link href="src/nvd3-master/src/nv.d3.css" rel="stylesheet" type="text/css">
+
   <script src="js/libs/jquery-1.9.1.js"></script>
   <script src="js/libs/bootstrap.js"></script>
   <script src="js/libs/handlebars-1.0.0-rc.4.js"></script>
   <script src="js/libs/ember-1.0.0-rc.6.js"></script>
+
   <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="js/libs/nvd3/nv.d3.min.js"></script>
+  <script src="src/nvd3-master/lib/d3.v2.js"></script>
+  <script src="src/nvd3-master/nv.d3.js"></script>
+  <script src="src/nvd3-master/src/tooltip.js"></script>
+  <script src="src/nvd3-master/src/utils.js"></script>
+  <script src="src/nvd3-master/src/models/legend.js"></script>
+  <script src="src/nvd3-master/src/models/axis.js"></script>
+  <script src="src/nvd3-master/src/models/scatter.js"></script>
+  <script src="src/nvd3-master/src/models/line.js"></script>
+  <script src="src/nvd3-master/src/models/lineChart.js"></script>
+  <script src="src/nvd3-master/src/models/multiBar.js"></script>
+  <script src="src/nvd3-master/src/models/multiBarChart.js"></script>
+  <script src="src/nvd3-master/src/models/historicalBar.js"></script>
+  <script src="src/nvd3-master/src/models/pie.js"></script>
+  <script src="src/nvd3-master/src/models/pieChart.js"></script>
+
   <script src="http://builds.emberjs.com.s3.amazonaws.com/ember-data-0.13.js"></script>
-  <scriot src"http://underscorejs.org/underscore.js"></script>
+  <script src="http://underscorejs.org/underscore.js"></script>
   <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/models.js"></script>
   <script src="js/routes.js"></script>
   <script src="js/views.js"></script>
+  <script src="js/helpers.js"></script>
 </head>
 <body>
 
@@ -74,18 +92,15 @@
       <div class="row-fluid" style="margin-bottom:20px">
         <button class="btn btn-info" type="button">Update Charts</button>
       </div>
-      Dashboard charts here
       {{#each controller}}
-      {{metricTitle}}
-      {{calculation}}
-      {{#each filters}}
-      {{#each values}}
-      {{value}} {{selected}}
+        {{#if model.loadedMetric}}
+          <div class="container-fluid">
+            <h4>{{metricTitle}}</h4>
+            <h6 style="color: #B6B6B4">Grouped by {{reduceField}}</h6>
+            {{view App.ChartView}}
+          </div>
+        {{/if}}
       {{/each}}
-      {{/each}}
-      {{format}}
-      {{/each}}
-      {{outlet}}
     </div>
   </script>
 
@@ -96,20 +111,19 @@
       <div class="row-fluid" style="margin-bottom:20px">
         <button class="btn btn-info" type="button">Update Charts</button>
       </div>
-      Economy charts here
       {{#each controller}}
-      {{view App.ChartView}}
+        {{#if model.loadedMetric}}
+          <div class="container-fluid">
+            <h4>{{metricTitle}}</h4>
+            <h6 style="color: #B6B6B4">Grouped by {{reduceField}}</h6>
+            {{view App.ChartView}}
+          </div>
+        {{/if}}
       {{/each}}
     </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="chart">
-    <div class="container-fluid">
-      This a {{format}} chart
-      {{#each values}}
-      {{/each}}
-      {{outlet}}
-    </div>
   </script>
 
 </body>

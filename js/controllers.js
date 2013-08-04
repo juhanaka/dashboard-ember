@@ -9,3 +9,27 @@ App.FilterController = Ember.ObjectController.extend({
 		return "#" + this.get('filterTitle');}.property('filterTitle')
 });
 
+App.MetricController = Ember.ObjectController.extend({
+	reduceField: 'date',
+	calculatedData: function() {
+		return reduceByField(this.get('values'), this.get('reduceField'), this.get('calculation'), this.get('id'))
+	}.property('values', 'reduceField', 'calculation', 'id')
+});
+
+
+
+
+
+
+
+
+App.DashboardController = Ember.ArrayController.extend({
+	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
+	itemController: 'metric'
+});
+
+App.EconomyController = Ember.ArrayController.extend({
+	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
+	itemController: 'metric'
+});
+

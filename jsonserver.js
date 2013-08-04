@@ -20,7 +20,7 @@ function getTrackInfoJson() {
     if (path == "options")
         return { "dates": [{"value":1, "selected": false}, {"value":3, "selected": true}, {"value":7, "selected": true}, {"value":14, "selected": true}, {"value":30, "selected": true}]};
     else if (path == "dau")
-        return {"dau": [{"key": {"date": 1}, "val": 1000}]};
-    else if (path == "dau")
+        return {"dau": [{"key": {"date": 1, "device":"iPad3"}, "val": 500}, {"key": {"date": 1, "device":"iPad4"}, "val": 1000}, {"key": {"date": 2, "device":"iPad3"}, "val": 2000}]};
+    else if (path == "dnu")
         return {"dnu": [{"key": {"date": 1}, "val": 1000}]};
 }

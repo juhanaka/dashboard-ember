@@ -4,23 +4,34 @@ var sumList = function(data) {
   }, 0);
 };
 
-var reduceByField = function(data, field, calculation) {
+var reduceByField = function(data, field, calculation, name) {
     var grouped = _.groupBy(data, function(item) {
         return item["key"][field];});
-    var reducedToValues = [];
-    for (key in grouped) {
-        var valueArray = [];
+
+    var pointArray = [];
+    for (var key in grouped) {
+        var yValueArray = [];
+        var point = {};
+        var yValue = 0;
+        var xValue = key;
+
         _.each(grouped[key], function(item) {
-            console.log(item["val"]);
-            valueArray.push(item["val"]);});
+            yValueArray.push(item["val"]);});
+
         if (calculation == "sum")
-            var value = sumList(valueArray);
-        var obj = {};
-        obj[key] = value;
-        reducedToValues.push(obj);
+            yValue = sumList(yValueArray);
+
+        point.x = parseInt(xValue);
+        point.y = yValue;
+
+        pointArray.push(point);
     }
 
-    return reducedToValues
-};
+    var result = {};
+    result.values = pointArray;
+    result.key = name
 
-http://jsfiddle.net/85FZZ/
+    var resultArray = [];
+    resultArray.push(result);
+    return resultArray
+};

@@ -62,7 +62,7 @@ App.Filters = App.Filter.all();
 //METRICS MODELS
 
 var defaultMetricsSettings = [
-{"id":"dau", "view" : "Economy", "calculation" : "sum", "format" : "bar", "width" : "48%"}, 
+{"id":"dau", "view" : "Dashboard", "calculation" : "sum", "format" : "bar", "width" : "48%"}, 
 {"id":"dnu", "view" : "Economy", "calculation" : "sum", "format" : "line", "width" : "48%"},
 {"id":"revenue", "view" : "Economy", "calculation" : "sum", "format" : "bar", "width" : "48%"}
 ];
