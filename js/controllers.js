@@ -11,6 +11,7 @@ App.FilterController = Ember.ObjectController.extend({
 
 App.MetricController = Ember.ObjectController.extend({
 	reduceField: 'date',
+
 	calculatedData: function() {
 		return reduceByField(this.get('values'), this.get('reduceField'), this.get('calculation'), this.get('id'))
 	}.property('values', 'reduceField', 'calculation', 'id')

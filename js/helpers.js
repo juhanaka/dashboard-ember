@@ -21,7 +21,7 @@ var reduceByField = function(data, field, calculation, name) {
         if (calculation == "sum")
             yValue = sumList(yValueArray);
 
-        point.x = parseInt(xValue);
+        point.x = xValue;
         point.y = yValue;
 
         pointArray.push(point);
@@ -35,3 +35,18 @@ var reduceByField = function(data, field, calculation, name) {
     resultArray.push(result);
     return resultArray
 };
+
+var setGraphAxis = function(data, chart) {
+    var type = typeof(data[0]['values'][0]['x'])
+    if (type == 'date')
+        chart.xAxis
+            .tickFormat(function(d) {
+                return d3.time.format('%x')(new Date(d));
+            })
+            .rotateLabels(70)
+            .scale(x)
+            .ticks(graph.items.length + 1)
+    return chart
+
+
+}

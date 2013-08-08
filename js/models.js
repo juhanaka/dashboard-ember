@@ -62,9 +62,9 @@ App.Filters = App.Filter.all();
 //METRICS MODELS
 
 var defaultMetricsSettings = [
-{"id":"dau", "view" : "Dashboard", "calculation" : "sum", "format" : "bar", "width" : "48%"}, 
-{"id":"dnu", "view" : "Economy", "calculation" : "sum", "format" : "line", "width" : "48%"},
-{"id":"revenue", "view" : "Economy", "calculation" : "sum", "format" : "bar", "width" : "48%"}
+{"id":"dau", "view" : "Dashboard", "calculation" : "sum", "format" : "bar", "width" : "48%", "defaultGroupField": "date", "groupFields": ["date", "device"]}, 
+{"id":"dnu", "view" : "Economy", "calculation" : "sum", "format" : "line", "width" : "48%", "defaultGroupField": "date", "groupFields": ["date", "device"]},
+{"id":"revenue", "view" : "Economy", "calculation" : "sum", "format" : "bar", "width" : "48%", "defaultGroupField": "date", "groupFields": ["date", "device"]}
 ];
 
 App.Metric = Ember.Object.extend({
@@ -110,7 +110,7 @@ App.Metric.reopenClass({
 		var metrics = Ember.A();
 		defaultMetricsSettings.forEach(function(metric) {
 			if (metric.view == searchView)
-				metrics.pushObject(App.Metric.create({id: metric.id},{view: metric.view}, {calculation: metric.calculation}, {format: metric.format}, {width: metric.width}));
+				metrics.pushObject(App.Metric.create({id: metric.id},{view: metric.view}, {calculation: metric.calculation}, {format: metric.format}, {width: metric.width}, {groupFields: metric.groupFields}));
 		});
 		this._metrics = metrics;
 		return metrics;
