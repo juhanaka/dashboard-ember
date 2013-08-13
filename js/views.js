@@ -1,5 +1,6 @@
 App.ChartwrapperView = Ember.View.extend({
 	templateName: 'chartwrapper'
+
 });
 
 App.ChartView = Ember.View.extend({
@@ -38,10 +39,23 @@ App.ChartView = Ember.View.extend({
 
 	didInsertElement: function() {
 		this.addChart();
-	}
+	},
 
-
+	reduceFieldChanged: Ember.observer(function() {
+		console.log("field changed");
+		this.addChart();
+	}, 'controller.reduceField')
 	}
 
 );
+
+App.ApplicationView = Ember.View.extend({
+	didInsertElement: function() {
+		$("#slider").rangeSlider();
+	}
+})
+
+
+
+
 

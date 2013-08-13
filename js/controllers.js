@@ -10,7 +10,20 @@ App.FilterController = Ember.ObjectController.extend({
 });
 
 App.MetricController = Ember.ObjectController.extend({
-	reduceField: 'date',
+	reduceField: function() {
+		var fields = this.get('groupFields');
+		var field = "";
+		fields.forEach(function(element) {
+			if (element.isActive) 
+				field = element.name})
+		console.log(field);
+		return field;
+	}.property('groupFields'),
+
+	select: function(name) {
+		console.log(this.get('groupFields')[0].isActive);
+		this.set('reduceField', name);
+	},
 
 	calculatedData: function() {
 		return reduceByField(this.get('values'), this.get('reduceField'), this.get('calculation'), this.get('id'))
@@ -26,11 +39,27 @@ App.MetricController = Ember.ObjectController.extend({
 
 App.DashboardController = Ember.ArrayController.extend({
 	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
-	itemController: 'metric'
+	itemController: 'metric',
+	updateCharts: function(model) {
+		model.forEach(function(metric) {
+			metric.set('loadedMetric', false);;
+			metric.loadValues()});
+	},
+
+
+
 });
 
 App.EconomyController = Ember.ArrayController.extend({
 	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
-	itemController: 'metric'
+	itemController: 'metric',
+	updateCharts: function(model) {
+	model.forEach(function(metric) {
+		metric.set('loadedMetric', false);;
+		metric.loadValues()});
+},
+
+	
+
 });
 

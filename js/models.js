@@ -62,9 +62,10 @@ App.Filters = App.Filter.all();
 //METRICS MODELS
 
 var defaultMetricsSettings = [
-{"id":"dau", "view" : "Dashboard", "calculation" : "sum", "format" : "bar", "width" : "48%", "defaultGroupField": "date", "groupFields": ["date", "device"]}, 
-{"id":"dnu", "view" : "Economy", "calculation" : "sum", "format" : "line", "width" : "48%", "defaultGroupField": "date", "groupFields": ["date", "device"]},
-{"id":"revenue", "view" : "Economy", "calculation" : "sum", "format" : "bar", "width" : "48%", "defaultGroupField": "date", "groupFields": ["date", "device"]}
+{"id":"dau", "calcMetric":false, "view" : "Dashboard", "visible": true, "calculation" : "sum", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]}, 
+{"id":"dnu", "calcMetric":false, "view" : "Dashboard", "displayWith": "dnu", "visible": true, "calculation" : "sum", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]}, 
+{"id":"revenue", "calcMetric":false, "view" : "Economy", "visible": true, "calculation" : "sum", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
+{"id":"revenuePerPlayer","calcMetric":true, "view" : "Economy", "visible": true, "calculation" : "divide", "numerator":"revenue", "denominator":"dau", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
 ];
 
 App.Metric = Ember.Object.extend({
@@ -80,26 +81,30 @@ App.Metric = Ember.Object.extend({
 	loadValues: function() {
 	var metric = this;
 	var filters = metric.get('filters');
-	
-	return Ember.Deferred.promise(function (p) {  
-		if (metric.get('loadedMetric')) { 
-			p.resolve(metric.get('values'));
+	if (!this.get('calcMetric')) {  
+		return Ember.Deferred.promise(function (p) {  
+			if (metric.get('loadedMetric')) { 
+				p.resolve(metric.get('values'));
 
-		} else {
-			p.resolve(
-			console.log('sending ajax'),
-			$.ajax({ 
-			url: "http://127.0.0.1:13373/" + metric.get('id') + "/",
-			data: JSON.stringify(metric.get('filters')),
-			}).then(function(response) {
-			var values = Ember.A();
-			response[metric.get('id')].forEach(function(value) {
-				values.push(value);
-			});
-			metric.setProperties({"values": values, "loadedMetric": true});
-			return values;
-			}))
-		}})}
+			} else {
+				p.resolve(
+				console.log('sending ajax'),
+				$.ajax({ 
+				url: "http://127.0.0.1:13373/" + metric.get('id') + "/",
+				data: JSON.stringify(metric.get('filters')),
+				}).then(function(response) {
+				var values = Ember.A();
+				response[metric.get('id')].forEach(function(value) {
+					values.push(value);
+				});
+				metric.setProperties({"values": values, "loadedMetric": true});
+				return values;
+				}))
+			}})}
+	else {
+		metric.setProperties({"loadedMetric": true})
+	}
+	}
 
 
 });
@@ -110,7 +115,7 @@ App.Metric.reopenClass({
 		var metrics = Ember.A();
 		defaultMetricsSettings.forEach(function(metric) {
 			if (metric.view == searchView)
-				metrics.pushObject(App.Metric.create({id: metric.id},{view: metric.view}, {calculation: metric.calculation}, {format: metric.format}, {width: metric.width}, {groupFields: metric.groupFields}));
+				metrics.pushObject(App.Metric.create({id: metric.id},{view: metric.view}, {calcMetric: metric.calcMetric}, {visible: metric.visible}, {calculation: metric.calculation}, {divideBy: metric.divideBy}, {format: metric.format}, {width: metric.width}, {groupFields: metric.groupFields}));
 		});
 		this._metrics = metrics;
 		return metrics;

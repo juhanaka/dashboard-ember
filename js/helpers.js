@@ -1,3 +1,5 @@
+//Calculations
+
 var sumList = function(data) {
   return _.reduce(data, function(memo, element) {
     return memo + element;
@@ -37,15 +39,18 @@ var reduceByField = function(data, field, calculation, name) {
 };
 
 var setGraphAxis = function(data, chart) {
-    var type = typeof(data[0]['values'][0]['x'])
-    if (type == 'date')
+    var type = new Date(data[0]['values'][0]['x'])
+
+    if (type.getMonth()) {  
         chart.xAxis
             .tickFormat(function(d) {
                 return d3.time.format('%x')(new Date(d));
             })
             .rotateLabels(70)
-            .scale(x)
-            .ticks(graph.items.length + 1)
+            //.scale(x)
+            //.ticks(graph.items.length + 1) 
+        }
+
     return chart
 
 
