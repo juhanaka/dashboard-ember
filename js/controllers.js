@@ -9,27 +9,39 @@ App.FilterController = Ember.ObjectController.extend({
 		return "#" + this.get('filterTitle');}.property('filterTitle')
 });
 
-App.MetricController = Ember.ObjectController.extend({
+
+App.ChartController = Ember.ObjectController.extend({
 	reduceField: function() {
 		var fields = this.get('groupFields');
 		var field = "";
 		fields.forEach(function(element) {
 			if (element.isActive) 
 				field = element.name})
-		console.log(field);
 		return field;
 	}.property('groupFields'),
 
 	select: function(name) {
-		console.log(this.get('groupFields')[0].isActive);
-		this.set('reduceField', name);
+	console.log(this.get('groupFields')[0].isActive);
+	this.set('reduceField', name);
 	},
 
 	calculatedData: function() {
-		return reduceByField(this.get('values'), this.get('reduceField'), this.get('calculation'), this.get('id'))
-	}.property('values', 'reduceField', 'calculation', 'id')
-});
+		console.log(this.get('loadedMetrics'));
+		var calculatedData = Ember.A();
+		var chart = this;
+		var metrics = chart.get('chartMetrics');
+		metrics.forEach( function(metric) {
+			console.log(metric);
+			console.log(metric.get('values'));
+			calculatedData.pushObject(reduceByField(metric.values, chart.get('reduceField'), metric.id))
+		});
+		console.log(calculatedData)
 
+		if (this.get('normalize')) {calculatedData = divide(calculatedData, this.get('normalizeWith'))}
+		return calculatedData
+	}.property('reduceField', 'calculation', 'metrics.@each.values', 'normalize', 'normalizeWith')
+
+})
 
 
 
@@ -39,12 +51,16 @@ App.MetricController = Ember.ObjectController.extend({
 
 App.DashboardController = Ember.ArrayController.extend({
 	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
-	itemController: 'metric',
+	itemController: 'chart',
 	updateCharts: function(model) {
-		model.forEach(function(metric) {
-			metric.set('loadedMetric', false);;
-			metric.loadValues()});
-	},
+	console.log(model[0]);
+	var metrics = model[0].get('metrics');
+	console.log(metrics);
+	metrics.forEach(function(metric) {
+		metric.set('loadedMetric', false);
+		metric.loadValues()});
+
+	}
 
 
 
@@ -52,12 +68,36 @@ App.DashboardController = Ember.ArrayController.extend({
 
 App.EconomyController = Ember.ArrayController.extend({
 	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
-	itemController: 'metric',
+	itemController: 'chart',
 	updateCharts: function(model) {
-	model.forEach(function(metric) {
-		metric.set('loadedMetric', false);;
+	console.log(model[0]);
+	var metrics = model[0].get('metrics');
+	console.log(metrics);
+	metrics.forEach(function(metric) {
+		metric.set('loadedMetric', false);
 		metric.loadValues()});
-},
+
+	}
+
+	
+
+});
+
+App.GameplayController = Ember.ArrayController.extend({
+	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
+	itemController: 'chart',
+	updateCharts: function(model) {
+	console.log(model[0]);
+	var metrics = model[0].get('metrics');
+	console.log(metrics);
+	metrics.forEach(function(metric) {
+		metric.set('loadedMetric', false);
+		metric.loadValues()});
+
+	}
+
+
+
 
 	
 

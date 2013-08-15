@@ -27,10 +27,6 @@
   <script src="src/nvd3-master/src/models/lineChart.js"></script>
   <script src="src/nvd3-master/src/models/multiBar.js"></script>
   <script src="src/nvd3-master/src/models/multiBarChart.js"></script>
-  <script src="src/nvd3-master/src/models/historicalBar.js"></script>
-  <script src="src/nvd3-master/src/models/pie.js"></script>
-  <script src="src/nvd3-master/src/models/pieChart.js"></script>
-  <script src="http://builds.emberjs.com.s3.amazonaws.com/ember-data-0.13.js"></script>
   <script src="http://underscorejs.org/underscore.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
@@ -51,7 +47,7 @@
       <ul class="nav navbar-nav">
         <li>{{#linkTo dashboard}}Dashboard{{/linkTo}}</li>
         <li>{{#linkTo economy}}Economy{{/linkTo}}</li>
-        <li><a href='#'>Gameplay</a></li>
+        <li>{{#linkTo gameplay}}Gameplay{{/linkTo}}</li>
         <li><a href='#'>PvP</a></li>
         <li><a href='#'>HC Spending</a></li>
         <li><a href='#'>Server Stats</a></li>
@@ -91,39 +87,44 @@
 
 
   <script type="text/x-handlebars" data-template-name="dashboard">
-    <div class="container-fluid">
-      <div class="row-fluid" style="margin-bottom:20px">
+    <div class="row-fluid" style="margin-bottom:20px">
         <button class="btn btn-info" type="button" {{action 'updateCharts' model}}>Update Charts</button>
-      </div>
-      {{#each controller}}
-      {{#if model.visible}}
-        {{#if model.loadedMetric}}
-            {{view App.ChartwrapperView}}
-        {{/if}}
-      {{/if}}
-      {{/each}}
     </div>
+    {{#each controller}}
+      {{view App.ChartwrapperView}}
+    {{/each}}
   </script>
 
 
 
   <script type="text/x-handlebars" data-template-name="economy">
-    <div class="container-fluid">
-      <div class="row-fluid" style="margin-bottom:20px">
+    <div class="row-fluid" style="margin-bottom:20px">
         <button class="btn btn-info" type="button" {{action 'updateCharts' model}}>Update Charts</button>
-      </div>
-      {{#each controller}}
-          {{#if model.loadedMetric}}
-              {{view App.ChartwrapperView}}
-        {{/if}}
-      {{/each}}
+    </div>
+    {{#each controller}}
+      {{view App.ChartwrapperView}}
+    {{/each}}
     </div>
   </script>
+
+  <script type="text/x-handlebars" data-template-name="gameplay">
+    <div class="row-fluid" style="margin-bottom:20px">
+        <button class="btn btn-info" type="button" {{action 'updateCharts' model}}>Update Charts</button>
+    </div>
+    {{#each controller}}
+      {{view App.ChartwrapperView}}
+    {{/each}}
+  </script>
+
+
 
 
   <script type="text/x-handlebars" data-template-name="chartwrapper">
     <div class="container-fluid">
-        <h4>{{metricTitle}}</h4>
+        <h3>{{id}}</h3>
+        {{#if normalize}}
+        <h5 style="color:#BCC6CC">Normalized with {{normalizeWith}}</h5>
+        {{/if}}
         Group by:
         <div class="btn-group" data-toggle="buttons">
           {{#each groupFields}}
@@ -139,6 +140,7 @@
 
   <script type="text/x-handlebars" data-template-name="chart">
   </script>
+
 
 
 </body>

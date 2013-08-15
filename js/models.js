@@ -1,8 +1,22 @@
+var defaultMetricsSettings = [
+{"id":"dau"}, 
+{"id":"dnu"}, 
+{"id":"revenue"}
+];
+
+var chartSettings = [
+{"id": "dnu", "view" : "Gameplay", "metricIds" : ["dnu", "dau"], "normalize": true, "normalizeWith": "dau", "format" :"bar", "width": "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]}
+];
+
+var defaultFilters = ['dates'];
+
+
 //Models
 
 //FILTER MODELS
 
-var defaultFilters = ['dates'];
+
+
 
 //set Filter class. The Filter object will be multiplied for each filter.
 App.Filter = Ember.Object.extend({
@@ -49,7 +63,7 @@ App.Filter.reopenClass({
 		return all;
 }});
 
-//reopen Filter to set an observer that notifies when filter is changed
+//reopen Filter to set an observer that notifies when filter is changed. Note: this is now not in use
 App.Filter.reopen({
 	filterChanged: Ember.observer(function() {
 	console.log("filter changed");
@@ -60,13 +74,6 @@ App.Filters = App.Filter.all();
 
 
 //METRICS MODELS
-
-var defaultMetricsSettings = [
-{"id":"dau", "calcMetric":false, "view" : "Dashboard", "visible": true, "calculation" : "sum", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]}, 
-{"id":"dnu", "calcMetric":false, "view" : "Dashboard", "displayWith": "dnu", "visible": true, "calculation" : "sum", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]}, 
-{"id":"revenue", "calcMetric":false, "view" : "Economy", "visible": true, "calculation" : "sum", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
-{"id":"revenuePerPlayer","calcMetric":true, "view" : "Economy", "visible": true, "calculation" : "divide", "numerator":"revenue", "denominator":"dau", "format" : "bar", "width" : "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
-];
 
 App.Metric = Ember.Object.extend({
 
@@ -80,8 +87,7 @@ App.Metric = Ember.Object.extend({
 
 	loadValues: function() {
 	var metric = this;
-	var filters = metric.get('filters');
-	if (!this.get('calcMetric')) {  
+	var filters = metric.get('filters'); 
 		return Ember.Deferred.promise(function (p) {  
 			if (metric.get('loadedMetric')) { 
 				p.resolve(metric.get('values'));
@@ -101,23 +107,49 @@ App.Metric = Ember.Object.extend({
 				return values;
 				}))
 			}})}
-	else {
-		metric.setProperties({"loadedMetric": true})
-	}
-	}
-
-
 });
+
 
 App.Metric.reopenClass({
+	all: function() {
+		if (this._all) {return this._all; }
+		var all = Ember.A();
+		defaultMetricsSettings.forEach(function(metric) {
+			var metric = App.Metric.create({id: metric.id});
+			metric.loadValues();
+			all.pushObject(metric);
+		});
+		this._all = all;
+		return all;}
+});
+
+App.Metrics = App.Metric.all();
+
+App.Chart = Ember.Object.extend({
+	metricsBinding: 'App.Metrics',
+
+	chartMetrics: function() {
+		var chart = this;
+		var metrics = chart.get('metrics');
+		var chartMetrics = Ember.A();
+		chart.get('metricIds').forEach(function(metricId) {
+			metrics.filter(function(metric) {
+			if (metric.id == metricId)
+				chartMetrics.pushObject(metric);
+		})})
+		return chartMetrics;
+	}.property('metrics', 'metricIds')	
+});
+
+App.Chart.reopenClass({
 	findByView: function(searchView) {
 		if (this._findByView) {return this._findByView; }
-		var metrics = Ember.A();
-		defaultMetricsSettings.forEach(function(metric) {
-			if (metric.view == searchView)
-				metrics.pushObject(App.Metric.create({id: metric.id},{view: metric.view}, {calcMetric: metric.calcMetric}, {visible: metric.visible}, {calculation: metric.calculation}, {divideBy: metric.divideBy}, {format: metric.format}, {width: metric.width}, {groupFields: metric.groupFields}));
+		var charts = Ember.A();
+		chartSettings.forEach(function(chart) {
+			if (chart.view == searchView)
+				charts.pushObject(App.Chart.create({id: chart.id}, {format: chart.format}, {width: chart.width}, {view: chart.view}, {metricIds: chart.metricIds}, {normalize: chart.normalize}, {normalizeWith: chart.normalizeWith}, {groupFields: chart.groupFields}));
 		});
-		this._metrics = metrics;
-		return metrics;
+		return charts;
 	}
-});
+})
+

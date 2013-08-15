@@ -6,7 +6,8 @@ var sumList = function(data) {
   }, 0);
 };
 
-var reduceByField = function(data, field, calculation, name) {
+var reduceByField = function(data, field, name) {
+
     var grouped = _.groupBy(data, function(item) {
         return item["key"][field];});
 
@@ -20,7 +21,6 @@ var reduceByField = function(data, field, calculation, name) {
         _.each(grouped[key], function(item) {
             yValueArray.push(item["val"]);});
 
-        if (calculation == "sum")
             yValue = sumList(yValueArray);
 
         point.x = xValue;
@@ -33,13 +33,49 @@ var reduceByField = function(data, field, calculation, name) {
     result.values = pointArray;
     result.key = name
 
-    var resultArray = [];
-    resultArray.push(result);
-    return resultArray
+    return result
 };
 
+var divide = function(data, normalizeWith) {
+    console.log('normaliziing')
+    var numerators = [];
+    var result = [];
+    var denominator = {};
+
+    data.forEach(function(metric) {
+        if(metric.key == normalizeWith)
+            denominator = metric
+        else 
+            numerators.push(metric)
+    });
+
+    numerators.forEach(function(numerator) {      
+        var values = numerator.values
+        var newValues = _.map(values, function(value) {
+            var xValue = value.x
+            var yValue = value.y
+            console.log(denominator.values, xValue);
+            var divisor = _.find(denominator.values, function(dvalue)         {return dvalue.x == xValue })
+                        
+     
+            return {x:xValue, y: yValue / divisor.y}
+        })
+        
+        result.push({key: numerator.key, values:newValues});
+        
+    })
+    return result
+
+};
+
+
+//Graphs
+
 var setGraphAxis = function(data, chart) {
+    console.log(data);
     var type = new Date(data[0]['values'][0]['x'])
+
+
 
     if (type.getMonth()) {  
         chart.xAxis
@@ -55,3 +91,4 @@ var setGraphAxis = function(data, chart) {
 
 
 }
+

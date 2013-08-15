@@ -4,6 +4,7 @@
 App.Router.map(function() {
 	this.resource('dashboard', {path: "/"});
 	this.resource('economy');
+	this.resource('gameplay');
 });
 
 
@@ -34,45 +35,19 @@ App.ApplicationRoute = Ember.Route.extend({
 
 App.DashboardRoute = Ember.Route.extend({
 	model: function() {
-		return App.Metric.findByView('Dashboard');
-	},
-
-	afterModel: function(model) {
-		var promise;
-		model.forEach(function(item) {
-			if (promise) {
-				promise = promise.then(function() {
-					item.loadValues();
-				});
-			} else {
-				promise = item.loadValues();
-			}
-		});
-		return promise
-	},
-
-
+		return App.Chart.findByView('Dashboard');
+	}
 });
 
 App.EconomyRoute = Ember.Route.extend({
 	model: function() {
-		return App.Metric.findByView('Economy');
-	},
-	
-	afterModel: function(model) {
-		var promise;
-		model.forEach(function(item) {
-			if (promise) {
-				promise = promise.then(function() {
-					item.loadValues();
-				});
-			} else {
-				promise = item.loadValues();
-			}
-		});
-
-		return promise
+		return App.Chart.findByView('Economy');
 	}
+});
 
+App.GameplayRoute = Ember.Route.extend({
+	model: function() {
+		return App.Chart.findByView('Gameplay');
+	}
 });
 

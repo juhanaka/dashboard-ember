@@ -27,5 +27,5 @@ function getTrackInfoJson() {
     else if (path == "dau")
         return {"dau": [{"key": {"date": date1, "device":"iPad3"}, "val": 500}, {"key": {"date": date2, "device":"iPad4"}, "val": 1000}, {"key": {"date": date2, "device":"iPad3"}, "val": 2000}]};
     else if (path == "dnu")
-        return {"dnu": [{"key": {"date": 1}, "val": 1000}]};
+        return {"dnu": [{"key": {"date": date1, "device":"iPad3"}, "val": 200}, {"key": {"date": date2, "device":"iPad4"}, "val": 400}, {"key": {"date": date2, "device":"iPad3"}, "val": 100}]};
 }

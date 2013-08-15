@@ -20,19 +20,13 @@ App.ChartView = Ember.View.extend({
 				var chart = nv.models.lineChart();
 
 			chart = setGraphAxis(data, chart);
-			/*
-			chart.xAxis
-				.tickFormat(d3.format(',f'));
-			chart.yAxis
-				.tickFormat(d3.format(',.1f'));
-			*/
+			
 			d3.select('#'+elementId)
 				.datum(data)
 				.transition().duration(500)
 				.call(chart)
 
 			nv.utils.windowResize(function() { d3.select('#' + elementId).call(chart) })
-
 			return chart
 		})
 	},
@@ -44,7 +38,13 @@ App.ChartView = Ember.View.extend({
 	reduceFieldChanged: Ember.observer(function() {
 		console.log("field changed");
 		this.addChart();
-	}, 'controller.reduceField')
+	}, 'controller.reduceField'),
+
+	metricsChanged: Ember.observer(function() {
+		console.log("data changed");
+		this.addChart();
+	}, 'controller.metrics.@each.values')
+
 	}
 
 );
