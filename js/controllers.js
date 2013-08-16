@@ -95,11 +95,5 @@ App.GameplayController = Ember.ArrayController.extend({
 		metric.loadValues()});
 
 	}
-
-
-
-
-	
-
 });
 

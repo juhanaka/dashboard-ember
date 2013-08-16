@@ -10,7 +10,8 @@ App.ChartView = Ember.View.extend({
 		var format = this.get('context.format'),
 			width = this.get('context.width'),
 			data = this.get('context.calculatedData'),
-			elementId = this.get('elementId');
+			elementId = this.get('elementId'),
+			display = this.get('context.display');
 		nv.addGraph(function() {
 
 
@@ -19,8 +20,9 @@ App.ChartView = Ember.View.extend({
 			else if (format == "line")
 				var chart = nv.models.lineChart();
 
-			chart = setGraphAxis(data, chart);
-			
+			chart = setGraphxAxis(data, chart);
+			chart = setGraphyAxis(data, chart, display);
+
 			d3.select('#'+elementId)
 				.datum(data)
 				.transition().duration(500)
@@ -51,7 +53,8 @@ App.ChartView = Ember.View.extend({
 
 App.ApplicationView = Ember.View.extend({
 	didInsertElement: function() {
-		$("#slider").rangeSlider();
+		$("#slider").dateRangeSlider()
+
 	}
 })
 

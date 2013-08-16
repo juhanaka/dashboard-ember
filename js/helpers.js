@@ -71,7 +71,7 @@ var divide = function(data, normalizeWith) {
 
 //Graphs
 
-var setGraphAxis = function(data, chart) {
+var setGraphxAxis = function(data, chart) {
     console.log(data);
     var type = new Date(data[0]['values'][0]['x'])
 
@@ -88,7 +88,14 @@ var setGraphAxis = function(data, chart) {
         }
 
     return chart
+};
 
+var setGraphyAxis = function(data, chart, display) {
+    if(display == 'percentage') {  
+        chart.yAxis
+                .tickFormat(d3.format(',.1%'));
+        }
 
+    return chart
 }
 

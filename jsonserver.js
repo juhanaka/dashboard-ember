@@ -23,7 +23,7 @@ server.listen(13373, "127.0.0.1");
 console.log('Server running at http://127.0.0.1:13373/');
 function getTrackInfoJson() {
     if (path == "options")
-        return { "dates": [{"value":1, "selected": false}, {"value":3, "selected": true}, {"value":7, "selected": true}, {"value":14, "selected": true}, {"value":30, "selected": true}]};
+        return { "dates": [{"value":1, "selected": false}, {"value":3, "selected": true}, {"value":7, "selected": true}, {"value":14, "selected": true}, {"value":30, "selected": true}], "devices": [{"value":"iPad3", "selected": false}, {"value":"iPad4", "selected": true}, {"value":"iPad2", "selected": true}]};
     else if (path == "dau")
         return {"dau": [{"key": {"date": date1, "device":"iPad3"}, "val": 500}, {"key": {"date": date2, "device":"iPad4"}, "val": 1000}, {"key": {"date": date2, "device":"iPad3"}, "val": 2000}]};
     else if (path == "dnu")
