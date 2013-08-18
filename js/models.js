@@ -1,4 +1,4 @@
-var defaultFilters = ['dates', 'devices'];
+var defaultFilters = [{'id':'dates', 'range':true}, {'id':'devices', 'range':false}];
 
 var defaultMetricsSettings = [
 {"id":"dau"}, 
@@ -19,8 +19,6 @@ var chartSettings = [
 //FILTER MODELS
 
 
-
-
 //set Filter class. The Filter object will be multiplied for each filter.
 App.Filter = Ember.Object.extend({
 	//capitalize first letter to get title
@@ -32,13 +30,15 @@ App.Filter = Ember.Object.extend({
 	loadedFilter: false,
 
 	//create method to load filter values from server
-	loadValues: function() {
+	loadValues: function() { 
 		var filter = this;
-		return Ember.Deferred.promise(function (p) {  
+		return Ember.Deferred.promise(function (p) {
+
 			if (filter.get('loadedFilter')) { 
 				p.resolve(filter.get('values'));
 			} else {
 				p.resolve($.getJSON("http://127.0.0.1:13373/options/" + filter.get('id')).then(function(response) {
+				console.log('got response for filters');
 				var values = Ember.A();
 				response[filter.get('id')].forEach(function(value) {
 					values.push(value);
@@ -57,12 +57,25 @@ App.Filter.reopenClass({
 	all: function() {
 		if (this._all) {return this._all; }
 		var all = Ember.A();
-		defaultFilters.forEach(function(id) {
-			var filter = App.Filter.create({id: id});
-			filter.loadValues();
+		var promise;
+		defaultFilters.forEach(function(defaultFilter) {
+			var filter = App.Filter.create({id: defaultFilter.id, range: defaultFilter.range});
 			all.pushObject(filter);
 		});
 		this._all = all;
+
+		var promise;
+		all.forEach(function(item) {
+			if(promise) {
+				promise = promise.then(function() {
+					item.loadValues();
+				});
+			} else {
+				promise = item.loadValues();
+			}
+		 });
+
+		all.loadedFilters = promise;
 		return all;
 }});
 
@@ -90,26 +103,29 @@ App.Metric = Ember.Object.extend({
 
 	loadValues: function() {
 	var metric = this;
-	var filters = metric.get('filters'); 
-		return Ember.Deferred.promise(function (p) {  
-			if (metric.get('loadedMetric')) { 
-				p.resolve(metric.get('values'));
+	var filters = metric.get('filters');
+	var loadedFilters = filters.get('loadedFilters');
+	  
+		return Ember.Deferred.promise(function (p) {
+			loadedFilters.then(function() {   
+				if (metric.get('loadedMetric')) { 
+					p.resolve(metric.get('values'));
 
-			} else {
-				p.resolve(
-				console.log('sending ajax'),
-				$.ajax({ 
-				url: "http://127.0.0.1:13373/" + metric.get('id') + "/",
-				data: JSON.stringify(metric.get('filters')),
-				}).then(function(response) {
-				var values = Ember.A();
-				response[metric.get('id')].forEach(function(value) {
-					values.push(value);
-				});
-				metric.setProperties({"values": values, "loadedMetric": true});
-				return values;
-				}))
-			}})}
+				} else {
+					p.resolve(
+					console.log('sending request for metrics'),
+					$.ajax({ 
+					url: "http://127.0.0.1:13373/" + metric.get('id') + "/",
+					data: JSON.stringify(metric.get('filters')),
+					}).then(function(response) {
+					var values = Ember.A();
+					response[metric.get('id')].forEach(function(value) {
+						values.push(value);
+					});
+					metric.setProperties({"values": values, "loadedMetric": true});
+					return values;
+					}))
+			} }) })}
 });
 
 
@@ -119,14 +135,27 @@ App.Metric.reopenClass({
 		var all = Ember.A();
 		defaultMetricsSettings.forEach(function(metric) {
 			var metric = App.Metric.create({id: metric.id});
-			metric.loadValues();
 			all.pushObject(metric);
 		});
 		this._all = all;
+
+		var promise;
+		all.forEach(function(item) {
+			if (promise) {
+				promise = promise.then(function() {
+					item.loadValues();
+				});
+			} else {
+				promise = item.loadValues();
+			}
+		 });
+
+		all.loadedMetrics = promise;
 		return all;}
 });
 
 App.Metrics = App.Metric.all();
+
 
 App.Chart = Ember.Object.extend({
 	metricsBinding: 'App.Metrics',
@@ -134,6 +163,7 @@ App.Chart = Ember.Object.extend({
 	chartMetrics: function() {
 		var chart = this;
 		var metrics = chart.get('metrics');
+		var loadedMetrics = metrics.get('loadedMetrics');
 		var chartMetrics = Ember.A();
 		chart.get('metricIds').forEach(function(metricId) {
 			metrics.filter(function(metric) {

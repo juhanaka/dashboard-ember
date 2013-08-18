@@ -37,7 +37,6 @@ var reduceByField = function(data, field, name) {
 };
 
 var divide = function(data, normalizeWith) {
-    console.log('normaliziing')
     var numerators = [];
     var result = [];
     var denominator = {};
@@ -54,7 +53,6 @@ var divide = function(data, normalizeWith) {
         var newValues = _.map(values, function(value) {
             var xValue = value.x
             var yValue = value.y
-            console.log(denominator.values, xValue);
             var divisor = _.find(denominator.values, function(dvalue)         {return dvalue.x == xValue })
                         
      
@@ -72,10 +70,8 @@ var divide = function(data, normalizeWith) {
 //Graphs
 
 var setGraphxAxis = function(data, chart) {
-    console.log(data);
-    var type = new Date(data[0]['values'][0]['x'])
-
-
+    try { 
+        var type = new Date(data[0]['values'][0]['x']);
 
     if (type.getMonth()) {  
         chart.xAxis
@@ -86,6 +82,10 @@ var setGraphxAxis = function(data, chart) {
             //.scale(x)
             //.ticks(graph.items.length + 1) 
         }
+    }
+    catch(err) {
+        var type = null;
+    }
 
     return chart
 };
@@ -98,4 +98,10 @@ var setGraphyAxis = function(data, chart, display) {
 
     return chart
 }
+
+
+//Handlebars
+Ember.Handlebars.helper('formatDate', function(date) {
+    return d3.time.format('%x')(new Date(date))
+})
 

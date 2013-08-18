@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/iThing-min.css">
+  <link rel="stylesheet" href="css/jquery-ui-1.10.3.custom.css">
   <link href="src/nvd3-master/src/nv.d3.css" rel="stylesheet" type="text/css">
 
   <script src="js/libs/jquery-1.9.1.js"></script>
@@ -28,15 +29,17 @@
   <script src="src/nvd3-master/src/models/multiBar.js"></script>
   <script src="src/nvd3-master/src/models/multiBarChart.js"></script>
   <script src="http://underscorejs.org/underscore.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
   <script src="src/JQDateRangeSlider-min.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/jquery_mixin.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/models.js"></script>
   <script src="js/routes.js"></script>
   <script src="js/views.js"></script>
   <script src="js/helpers.js"></script>
+  
 </head>
 <body>
 
@@ -55,7 +58,6 @@
       </ul>
   </div>
 
-  <div class="row-fluid">
   <div class="span8">
   <h4>Filters</h4>
   <div class="accordion" id="accordion2">
@@ -66,20 +68,31 @@
         {{filterTitle}}
       </a>
     </div>
+
     <div {{bindAttr id="filterTitle"}} class="accordion-body collapse">
       <div class="accordion-inner">
-      <ul class="nav nav-pills">
+
+        {{#if controller.range}}
+        <h4 style="margin-bottom:30px">Select a range</h4>
+        {{#view App.dateRangeSlider}}{{/view}}
+        <br></br>
+        <span class="label label-info">min:</span> {{formatDate this.values.0.selected.min}} 
+        <span class="label label-info">max:</span>{{formatDate this.values.0.selected.max}}
+        
+        {{else}}
+        <ul class="nav nav-pills">
         {{#each controller.values}}
           <label style="float:left; width:50px" >
             {{view Ember.Checkbox checkedBinding="selected"}}
             {{value}}
           </label>
-        {{/each}} 
+        {{/each}}
+        {{/if}}
+
       </div>
     </div>
   </div>
   {{/each}}
-  </div>
   </div>
   </div>
     {{outlet}}
@@ -107,6 +120,8 @@
     {{/each}}
     </div>
   </script>
+
+
 
   <script type="text/x-handlebars" data-template-name="gameplay">
     <div class="row-fluid" style="margin-bottom:20px">

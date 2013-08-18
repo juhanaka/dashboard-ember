@@ -11,6 +11,7 @@ App.FilterController = Ember.ObjectController.extend({
 
 
 App.ChartController = Ember.ObjectController.extend({
+	needs: "application",
 	reduceField: function() {
 		var fields = this.get('groupFields');
 		var field = "";
@@ -21,21 +22,16 @@ App.ChartController = Ember.ObjectController.extend({
 	}.property('groupFields'),
 
 	select: function(name) {
-	console.log(this.get('groupFields')[0].isActive);
 	this.set('reduceField', name);
 	},
 
 	calculatedData: function() {
-		console.log(this.get('loadedMetrics'));
 		var calculatedData = Ember.A();
 		var chart = this;
 		var metrics = chart.get('chartMetrics');
 		metrics.forEach( function(metric) {
-			console.log(metric);
-			console.log(metric.get('values'));
 			calculatedData.pushObject(reduceByField(metric.values, chart.get('reduceField'), metric.id))
 		});
-		console.log(calculatedData)
 
 		if (this.get('normalize')) {calculatedData = divide(calculatedData, this.get('normalizeWith'))}
 		return calculatedData
@@ -50,12 +46,11 @@ App.ChartController = Ember.ObjectController.extend({
 
 
 App.DashboardController = Ember.ArrayController.extend({
+	needs:"application",
 	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
 	itemController: 'chart',
 	updateCharts: function(model) {
-	console.log(model[0]);
 	var metrics = model[0].get('metrics');
-	console.log(metrics);
 	metrics.forEach(function(metric) {
 		metric.set('loadedMetric', false);
 		metric.loadValues()});
@@ -70,9 +65,7 @@ App.EconomyController = Ember.ArrayController.extend({
 	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
 	itemController: 'chart',
 	updateCharts: function(model) {
-	console.log(model[0]);
 	var metrics = model[0].get('metrics');
-	console.log(metrics);
 	metrics.forEach(function(metric) {
 		metric.set('loadedMetric', false);
 		metric.loadValues()});
@@ -87,9 +80,7 @@ App.GameplayController = Ember.ArrayController.extend({
 	//ApplicationController controls all the filters. Let's create a controller to handle each instance of a filter
 	itemController: 'chart',
 	updateCharts: function(model) {
-	console.log(model[0]);
 	var metrics = model[0].get('metrics');
-	console.log(metrics);
 	metrics.forEach(function(metric) {
 		metric.set('loadedMetric', false);
 		metric.loadValues()});
