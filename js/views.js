@@ -10,10 +10,10 @@ App.ChartView = Ember.View.extend({
 	addChart: function() {
 		console.log('in addchart function')
 		var format = this.get('context.format'),
-			width = this.get('context.width'),
 			data = this.get('context.calculatedData'),
 			elementId = this.get('elementId'),
 			display = this.get('context.display');
+			height = 200;
 		nv.addGraph(function() {
 
 
@@ -21,16 +21,18 @@ App.ChartView = Ember.View.extend({
 				var chart = nv.models.multiBarChart();
 			else if (format == "line")
 				var chart = nv.models.lineChart();
-
+			chart.height(height)
 			chart = setGraphxAxis(data, chart);
 			chart = setGraphyAxis(data, chart, display);
 
 			d3.select('#'+elementId)
 				.datum(data)
 				.transition().duration(500)
+				.attr('height', height)
 				.call(chart)
 
-			nv.utils.windowResize(function() { d3.select('#' + elementId).call(chart) })
+
+			nv.utils.windowResize(chart.update)
 			return chart
 		})
 	},
