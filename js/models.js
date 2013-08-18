@@ -7,9 +7,9 @@ var defaultMetricsSettings = [
 ];
 
 var chartSettings = [
-{"id": "dnu", "view" : "Dashboard", "metricIds" : ["dnu", "dau"], "normalize": true, "display": "percentage", "normalizeWith": "dau", "format" :"bar", "width": "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
-{"id": "Dau&Dnu", "view" : "Dashboard", "metricIds" : ["dau","dnu"], "normalize": false, "format" :"bar", "width": "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
-{"id": "JustDau", "view" : "Economy", "metricIds" : ["dau"], "normalize": false, "format" :"bar", "width": "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
+{"id": "Dnu", "view" : "Dashboard", "metricIds" : ["dnu", "dau"], "normalize": true, "display": "percentage", "normalizeWith": {"dnu":"dau"}, "format" :"bar", "width": "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
+{"id": "Dau & Dnu", "view" : "Dashboard", "metricIds" : ["dau","dnu"], "normalize": false, "format" :"bar", "width": "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
+{"id": "Just Dau", "view" : "Economy", "metricIds" : ["dau"], "normalize": false, "format" :"bar", "width": "48%", "groupFields": [{"name":"date", "isActive":true}, {"name":"device", "isActive":false}]},
 ];
 
 

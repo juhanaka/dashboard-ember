@@ -36,33 +36,37 @@ var reduceByField = function(data, field, name) {
     return result
 };
 
-var divide = function(data, normalizeWith) {
-    var numerators = [];
-    var result = [];
-    var denominator = {};
+var divideAll = function(data, normalizeWith) {
+    console.log('went to divide')
+    var numerator,
+        denominator,
+        result = [];
 
     data.forEach(function(metric) {
-        if(metric.key == normalizeWith)
-            denominator = metric
-        else 
-            numerators.push(metric)
-    });
-
-    numerators.forEach(function(numerator) {      
-        var values = numerator.values
-        var newValues = _.map(values, function(value) {
-            var xValue = value.x
-            var yValue = value.y
-            var divisor = _.find(denominator.values, function(dvalue)         {return dvalue.x == xValue })
-                        
-     
-            return {x:xValue, y: yValue / divisor.y}
-        })
-        
-        result.push({key: numerator.key, values:newValues});
-        
+        if(metric.key in normalizeWith) { 
+            var numerator = metric
+            var numeratorKey = numerator.key
+            var denominatorKey = normalizeWith[numeratorKey];
+            var denominator = _.find(data, function(metric) {return metric.key == denominatorKey})
+            result.push(singleDivide(numerator, denominator))
+        }
     })
+    console.log(result)
     return result
+} 
+
+var singleDivide = function(numerator, denominator) {
+    var values = numerator.values
+    var newValues = _.map(values, function(value) {
+        var xValue = value.x
+        var yValue = value.y
+        var divisor = _.find(denominator.values, function(dvalue) {return dvalue.x == xValue })
+                    
+ 
+        return {x:xValue, y: yValue / divisor.y}
+    })
+    
+    return {key: numerator.key, values:newValues};
 
 };
 

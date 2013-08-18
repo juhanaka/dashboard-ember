@@ -32,8 +32,7 @@ App.ChartController = Ember.ObjectController.extend({
 		metrics.forEach( function(metric) {
 			calculatedData.pushObject(reduceByField(metric.values, chart.get('reduceField'), metric.id))
 		});
-
-		if (this.get('normalize')) {calculatedData = divide(calculatedData, this.get('normalizeWith'))}
+		if (this.get('normalize')) {calculatedData = divideAll(calculatedData, this.get('normalizeWith'))}
 		return calculatedData
 	}.property('reduceField', 'calculation', 'metrics.@each.values', 'normalize', 'normalizeWith')
 
