@@ -56,7 +56,7 @@
         <li>{{#linkTo gameplay}}Gameplay{{/linkTo}}</li>
         <li><a href='#'>PvP</a></li>
         <li><a href='#'>HC Spending</a></li>
-        <li><a href='#'>Server Stats</a></li>
+        <li><a href='#'>Server</a></li>
         <li><a href='#'>Cohort</a></li>
       </ul>
   </div>
@@ -100,6 +100,7 @@
   </div>
     {{outlet}}
   </div>
+  <br></br>
   </script>
 
 
@@ -135,6 +136,13 @@
     {{/each}}
   </script>
 
+
+  <script type="text/x-handlebars" data-template-name="server">
+      <iframe src="https://app.datadoghq.com/graph/embed?token=1033a9e6bcafe1110c4898f80486110cc9347fac71c378ee689f05618760f3ef&height=500&width=1000" width="1000" height="600"></iframe>
+      <br></br>
+      <iframe src="https://app.datadoghq.com/graph/embed?token=91f469a1a226eab5bf397609d5b019992a30bda7d02b019700f527dc73a4955f&height=400&width=800" width="1000" height="600"></iframe>
+      <br></br> 
+  </script>
 
 
 

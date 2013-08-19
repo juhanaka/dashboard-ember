@@ -5,6 +5,7 @@ App.Router.map(function() {
 	this.resource('dashboard', {path: "/"});
 	this.resource('economy');
 	this.resource('gameplay');
+	this.resource('server');
 });
 
 
